@@ -3,12 +3,13 @@ import StripeCheckout from 'react-stripe-checkout'
 import axios from 'axios'
 
 const StripeCheckoutButton = ({ price }) => {
+    const priceForStrip = price * 100
     const onToken = (token) => {
         axios({
             url: 'payment',
             method: 'post',
             data: {
-                amount: price,
+                amount: priceForStrip,
                 token
             }
         }).then(response => {
@@ -19,7 +20,6 @@ const StripeCheckoutButton = ({ price }) => {
         })
     }
 
-    const priceForStrip = price * 100
     const pk = 'pk_test_4VIxvJVpStNV9KSQPjVZPTMR00Sxnsbhkx'
     return (
         <StripeCheckout 
