@@ -22,3 +22,19 @@ export const removeItemFromCart = (cartItems, cartItemToAdd) => {
         return cartItems
     }
 }
+
+export const mergeCartItems = (cartItems, newCartItems) => {
+    newCartItems.forEach(newCartItem => {
+        const existingCardItem = cartItems.find(cartItem => cartItem.id === newCartItem.id)
+        const quantityToAdd = newCartItem.quantity
+        if (existingCardItem) {
+            cartItems = cartItems.map(cartItem =>
+                cartItem.id === newCartItem.id ? {...cartItem, quantity: cartItem.quantity + quantityToAdd}
+                : cartItem
+            )
+        } else {
+            cartItems = [...cartItems, {...newCartItem, quantity: quantityToAdd}]
+        }
+    })
+    return cartItems
+}

@@ -1,9 +1,10 @@
 import { cartActionTypes } from './cart.types'
-import { addItemToCart, removeItemFromCart } from './cart.utils'
+import { addItemToCart, removeItemFromCart, mergeCartItems } from './cart.utils'
 
 const INITIAL_STATE = {
     hidden: true,
-    cartItems: []
+    cartItems: [],
+    cartFetchError: ''
 }
 
 const cartReducer = (state = INITIAL_STATE, action) => {
@@ -32,6 +33,21 @@ const cartReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 cartItems: []
+            }
+        case cartActionTypes.FETCH_CART_SUCCESS:
+            return {
+                ...state,
+                cartItems: mergeCartItems(state.cartItems, action.payload)
+            }
+        case cartActionTypes.FETCH_CART_FAILURE:
+            return {
+                ...state,
+                cartFetchError: action.payload
+            }
+        case cartActionTypes.SET_CART_ITEMS:
+            return {
+                ...state,
+                cartItems: action.payload
             }
         default:
             return state;

@@ -4,6 +4,7 @@ import UserActionTypes from './user.types'
 import { signInSuccess, signInFailure, signOutFailure, signOutSuccess, signUpFailure, signUpSuccess } from './user.actions'
 
 import { auth, googleProvider, createUserProfileDocument, getCurrentUser } from '../../firebase/firebase.utils'
+import { checkUserCart } from '../cart/cart.actions'
 
 export function* getSnapshotFromUserAuth(user, additionalData) {
     try {
@@ -44,7 +45,10 @@ export function* onEmailSignInStart() {
 export function* isUserAuthenticated() {
     try {
         const userAuth = yield getCurrentUser()
-        if(!userAuth) return
+        if(!userAuth){
+            yield put(checkUserCart())
+            return
+        } 
         yield getSnapshotFromUserAuth(userAuth)
     } catch (error) {
         yield put(signInFailure(error))

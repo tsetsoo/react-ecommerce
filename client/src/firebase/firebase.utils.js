@@ -38,10 +38,14 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     return userRef;
 }
 
+export const storeCartItems = async (currentUser, cartItems) => {
+    const userRef = firestore.doc(`users/${currentUser.id}`)
+    await userRef.update({cartItems: cartItems})
+}
+
 firebase.initializeApp(config);
 
 export const addCollectionAndDocuments = async (colelctionKey, documentsToAdd) => {
-    console.log(documentsToAdd)
     const collectionRef = firestore.collection(colelctionKey)
     const batch = firestore.batch()
     documentsToAdd.forEach(doc => {
@@ -66,6 +70,10 @@ export const convertCollectionsSnapshotToMap = (collections) => {
         accumulator[collection.title.toLowerCase()] = collection
         return accumulator
     },{})
+}
+
+export const convertUserToCartItemsMap = (userRef) => {
+    return userRef.data().cartItems.map(cartItem => cartItem)
 }
 
 export const getCurrentUser = () => {
